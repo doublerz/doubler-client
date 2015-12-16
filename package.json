@@ -1,5 +1,5 @@
 {
-  "name": "tractor-beam-react-client",
+  "name": "tractor-beam-client",
   "version": "1.0.0",
   "description": "An emulator for your Tractor Bean",
   "scripts": {
@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "react": "^0.14.0",
-    "react-dom": "^0.14.0"
+    "react-dom": "^0.14.0",
+    "simplewebrtc": "^2.0.0"
   },
   "standard": {
     "parser": "babel-eslint"
