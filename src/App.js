@@ -7,6 +7,7 @@ const A = 65
 const S = 83
 const D = 68
 const maxSpeed = 255
+const turnSpeed = maxSpeed / 1.5
 
 function clamp (value, min, max) {
   if (value > max) return max
@@ -57,11 +58,11 @@ export class App extends Component {
       speeds[1] = -maxSpeed
     }
     if (~keys.indexOf(A)) {
-      speeds[0] = clampSpeed(speeds[0] - maxSpeed / 2 * direction)
-      speeds[1] = clampSpeed(speeds[1] + maxSpeed / 2 * direction)
+      speeds[0] = clampSpeed(speeds[0] - turnSpeed * direction)
+      speeds[1] = clampSpeed(speeds[1] + turnSpeed * direction)
     } else if (~keys.indexOf(D)) {
-      speeds[0] = clampSpeed(speeds[0] + maxSpeed / 2 * direction)
-      speeds[1] = clampSpeed(speeds[1] - maxSpeed / 2 * direction)
+      speeds[0] = clampSpeed(speeds[0] + turnSpeed * direction)
+      speeds[1] = clampSpeed(speeds[1] - turnSpeed * direction)
     }
     this._webrtc.sendDirectlyToAll('control', 'speeds', speeds)
   }
