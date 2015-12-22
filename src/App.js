@@ -2,12 +2,18 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import SimpleWebRTC from 'simplewebrtc'
 
+// Key Codes
 const W = 87
 const A = 65
 const S = 83
 const D = 68
-const maxSpeed = 255
-const turnSpeed = maxSpeed / 1.5
+const LEFT = 37
+const UP = 38
+const RIGHT = 39
+const DOWN = 40
+
+const MAX_SPEED = 255
+const TURN_SPEED = MAX_SPEED / 1.4
 
 function clamp (value, min, max) {
   if (value > max) return max
@@ -16,7 +22,7 @@ function clamp (value, min, max) {
 }
 
 function clampSpeed (value) {
-  return clamp(value, -maxSpeed, maxSpeed)
+  return clamp(value, -MAX_SPEED, MAX_SPEED)
 }
 
 export class App extends Component {
@@ -49,20 +55,20 @@ export class App extends Component {
   updateSpeeds (keys) {
     let direction = 1
     const speeds = [0, 0]
-    if (~keys.indexOf(W)) {
-      speeds[0] = maxSpeed
-      speeds[1] = maxSpeed
-    } else if (~keys.indexOf(S)) {
+    if (~keys.indexOf(W) || ~keys.indexOf(UP)) {
+      speeds[0] = MAX_SPEED
+      speeds[1] = MAX_SPEED
+    } else if (~keys.indexOf(S) || ~keys.indexOf(DOWN)) {
       direction = -1
-      speeds[0] = -maxSpeed
-      speeds[1] = -maxSpeed
+      speeds[0] = -MAX_SPEED
+      speeds[1] = -MAX_SPEED
     }
-    if (~keys.indexOf(A)) {
-      speeds[0] = clampSpeed(speeds[0] - turnSpeed * direction)
-      speeds[1] = clampSpeed(speeds[1] + turnSpeed * direction)
-    } else if (~keys.indexOf(D)) {
-      speeds[0] = clampSpeed(speeds[0] + turnSpeed * direction)
-      speeds[1] = clampSpeed(speeds[1] - turnSpeed * direction)
+    if (~keys.indexOf(A) || ~keys.indexOf(LEFT)) {
+      speeds[0] = clampSpeed(speeds[0] - TURN_SPEED * direction)
+      speeds[1] = clampSpeed(speeds[1] + TURN_SPEED * direction)
+    } else if (~keys.indexOf(D) || ~keys.indexOf(RIGHT)) {
+      speeds[0] = clampSpeed(speeds[0] + TURN_SPEED * direction)
+      speeds[1] = clampSpeed(speeds[1] - TURN_SPEED * direction)
     }
     this._webrtc.sendDirectlyToAll('control', 'speeds', speeds)
   }
