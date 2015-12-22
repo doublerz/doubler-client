@@ -12,8 +12,9 @@ const UP = 38
 const RIGHT = 39
 const DOWN = 40
 
+const TIMEOUT = 500 // ms
 const MAX_SPEED = 255
-const TURN_SPEED = MAX_SPEED / 1.4
+const TURN_SPEED = MAX_SPEED / 1.5
 
 function clamp (value, min, max) {
   if (value > max) return max
@@ -39,8 +40,7 @@ export class App extends Component {
     this._webrtc = new SimpleWebRTC({
       localVideoEl: this.refs.local,
       remoteVideosEl: this.refs.remotes,
-      autoRequestMedia: true,
-      debug: true
+      autoRequestMedia: true
     }).once('readyToCall', () => {
       this._webrtc.joinRoom('tractor-beam')
     })
@@ -70,7 +70,16 @@ export class App extends Component {
       speeds[0] = clampSpeed(speeds[0] + TURN_SPEED * direction)
       speeds[1] = clampSpeed(speeds[1] - TURN_SPEED * direction)
     }
+    this.sendSpeeds(speeds)
+  }
+
+  sendSpeeds (speeds) {
     this._webrtc.sendDirectlyToAll('control', 'speeds', speeds)
+    if (this._safetyTimeout) clearTimeout(this._safetyTimeout)
+    this._safetyTimeout = setTimeout(
+      () => this.sendSpeeds(speeds),
+      TIMEOUT / 2
+    )
   }
 
   handleKeyDown (e) {
